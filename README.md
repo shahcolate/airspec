@@ -103,9 +103,11 @@ airspec score --dir /path/to/repo    # Score a different directory
 airspec score --weights type_coverage=20,test_narration=5  # Custom weights
 ```
 
-## Real-world example
+## Real-world examples
 
-We ran airspec against [Express.js](https://github.com/expressjs/express) — 141 source files, plain JavaScript, 15 years of history:
+### Express.js — 52/100
+
+We ran airspec against [Express](https://github.com/expressjs/express) — 141 source files, plain JavaScript, 15 years of history:
 
 ```
   ┌────────────────────────────────────────────────────┐
@@ -129,7 +131,35 @@ We ran airspec against [Express.js](https://github.com/expressjs/express) — 14
 
 Type coverage bottoms out at 0 — it's untyped JavaScript, so an AI agent has zero type information to work with. Test narration scores 67 thanks to 1,122 descriptively-named tests. Decision traceability is at 23 because 15 years of architectural decisions live in people's heads, not in the repo.
 
-Full breakdown with dimension-by-dimension analysis: [`examples/express/`](./examples/express/)
+Full breakdown: [`examples/express/`](./examples/express/)
+
+### OpenClaw (Moltbot) — 35/100
+
+[OpenClaw](https://github.com/openclaw/openclaw) is an AI agent with 330k+ stars. Irony: its own codebase is hard for AI agents to read.
+
+```
+  ┌────────────────────────────────────────────────────┐
+  │                                                    │
+  │   airspec — AI Readability Score                   │
+  │                                                    │
+  │              35 / 100                              │
+  │   █████░░░░░░░░░░                                  │
+  │                                                    │
+  │   Documentation Coverage        7  █░░░░░░░░░ ⚠    │
+  │   Architecture Clarity         66  ███████░░░      │
+  │   Decision Traceability        19  ██░░░░░░░░ ⚠    │
+  │   Contract Explicitness        43  ████░░░░░░ ⚠    │
+  │   Convention Consistency       47  █████░░░░░ ⚠    │
+  │   Context Budget Efficiency    15  ██░░░░░░░░ ⚠    │
+  │   Type Coverage                27  ███░░░░░░░ ⚠    │
+  │   Test Narration               61  ██████░░░░      │
+  │                                                    │
+  └────────────────────────────────────────────────────┘
+```
+
+18,775 exported symbols, 7% have docs. 15 million tokens — no context window can hold that. The architecture is actually solid (66, domain-named modules), but everything else is fighting the agent. 2,086 `any` types, 292 circular import edges, zero ADRs.
+
+Full breakdown: [`examples/openclaw/`](./examples/openclaw/)
 
 ## How it works
 

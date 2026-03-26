@@ -27,7 +27,12 @@ async function loadEncoder(): Promise<void> {
 export async function countTokens(text: string): Promise<number> {
   await loadEncoder();
   if (tiktokenEncoder) {
-    return tiktokenEncoder.encode(text).length;
+    try {
+      return tiktokenEncoder.encode(text).length;
+    } catch {
+      // Fall back to char estimation if encoding fails (e.g. special tokens)
+      return Math.ceil(text.length / 4);
+    }
   }
   return Math.ceil(text.length / 4);
 }

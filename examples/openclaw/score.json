@@ -1,0 +1,174 @@
+{
+  "version": "0.1.0",
+  "timestamp": "2026-03-26T13:19:42.864Z",
+  "composite_score": 35,
+  "profile": "default-2026",
+  "repository": {
+    "name": "openclaw",
+    "language": "typescript",
+    "framework": "express",
+    "source_files": 7902,
+    "total_tokens": 14894775
+  },
+  "dimensions": {
+    "documentation_coverage": {
+      "score": 7,
+      "weight": 0.15,
+      "details": {
+        "total_exports": 18775,
+        "documented_exports": 1338,
+        "trivial_docs": 1,
+        "coverage_pct": 7.13
+      }
+    },
+    "type_coverage": {
+      "score": 27,
+      "weight": 0.1,
+      "details": {
+        "typed_params": 41150,
+        "total_params": 65556,
+        "explicit_returns": 21705,
+        "total_functions": 106405,
+        "any_count": 2086
+      }
+    },
+    "convention_consistency": {
+      "score": 47,
+      "weight": 0.1,
+      "details": {
+        "function_naming_score": 100,
+        "variable_naming_score": 42,
+        "file_naming_score": 36,
+        "pattern_score": 0,
+        "organization_score": 89,
+        "exported_functions": 11108,
+        "exported_variables": 2628
+      }
+    },
+    "test_narration": {
+      "score": 61,
+      "weight": 0.1,
+      "details": {
+        "test_files": 2918,
+        "total_tests": 23802,
+        "descriptive_tests": 23155,
+        "tests_in_describe": 3304,
+        "describe_blocks": 5215,
+        "opaque_tests": 647
+      }
+    },
+    "context_budget_efficiency": {
+      "score": 15,
+      "weight": 0.1,
+      "details": {
+        "total_tokens": 14894775,
+        "signal_tokens": 14755183,
+        "noise_tokens": 139592,
+        "noise_ratio_pct": 1,
+        "large_unmarked_files": 144,
+        "has_gitignore": true,
+        "has_airspecignore": false
+      }
+    },
+    "architecture_clarity": {
+      "score": 66,
+      "weight": 0.15,
+      "details": {
+        "total_modules": 55,
+        "domain_dirs": 51,
+        "generic_dirs": 4,
+        "dir_coherence_score": 93,
+        "total_import_edges": 695,
+        "bidirectional_edges": 292,
+        "directionality_score": 58,
+        "has_entry_point": true,
+        "has_package_entry": true,
+        "modules_with_barrel": 3
+      }
+    },
+    "contract_explicitness": {
+      "score": 43,
+      "weight": 0.15,
+      "details": {
+        "cross_module_imports": 8678,
+        "typed_cross_module_imports": 2285,
+        "type_files": 122,
+        "invariant_comments": 778,
+        "total_modules": 55
+      }
+    },
+    "decision_traceability": {
+      "score": 19,
+      "weight": 0.15,
+      "details": {
+        "adr_present": false,
+        "adr_entries": 0,
+        "total_commits": 50,
+        "high_quality_commits": 14,
+        "low_quality_commits": 0,
+        "generic_commit_pct": 0,
+        "intent_comments": 258,
+        "bare_todos": 0,
+        "explained_todos": 12
+      }
+    }
+  },
+  "recommendations": [
+    {
+      "dimension": "documentation_coverage",
+      "priority": "high",
+      "message": "17437 of 18775 exported symbols lack JSDoc documentation. AI agents can't understand intent without docs.",
+      "action": "Add JSDoc comments to exported functions and types, starting with public API surfaces.",
+      "affected_count": 17437
+    },
+    {
+      "dimension": "context_budget_efficiency",
+      "priority": "high",
+      "message": "~14895K tokens to represent this repo. 1% is boilerplate/noise. AI agents waste context window on noise.",
+      "action": "Add .airspecignore for generated/vendored files. Mark generated files with header comments.",
+      "affected_count": 148948
+    },
+    {
+      "dimension": "decision_traceability",
+      "priority": "high",
+      "message": "Decision history is hard to trace. No ADRs or structured decision records found.",
+      "action": "Create a docs/adr/ directory and document key architectural decisions.",
+      "affected_count": 0
+    },
+    {
+      "dimension": "type_coverage",
+      "priority": "high",
+      "message": "2086 uses of `any` type found. 24406 parameters lack type annotations. AI agents rely on types to understand data flow.",
+      "action": "Add explicit type annotations to function parameters and return types.",
+      "affected_count": 26492
+    },
+    {
+      "dimension": "contract_explicitness",
+      "priority": "medium",
+      "message": "6393 cross-module imports use implementation types instead of explicit contracts.",
+      "action": "Create types.ts at module boundaries. Use `import type` for cross-module dependencies.",
+      "affected_count": 6393
+    },
+    {
+      "dimension": "convention_consistency",
+      "priority": "medium",
+      "message": "Naming conventions are inconsistent across the codebase. AI agents struggle with inconsistent patterns.",
+      "action": "Standardize naming: camelCase for functions/variables, PascalCase for classes/types, kebab-case for files.",
+      "affected_count": 0
+    },
+    {
+      "dimension": "test_narration",
+      "priority": "low",
+      "message": "647 tests use opaque names. AI agents can't learn behavioral contracts from tests.",
+      "action": "Use descriptive names: \"should reject expired tokens\" instead of \"test1\".",
+      "affected_count": 647
+    },
+    {
+      "dimension": "architecture_clarity",
+      "priority": "low",
+      "message": "292 circular import edges detected between modules. AI agents can't determine module boundaries.",
+      "action": "Refactor circular dependencies. Use dependency inversion or extract shared types.",
+      "affected_count": 292
+    }
+  ]
+}
