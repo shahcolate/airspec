@@ -111,6 +111,44 @@ For decision traceability, it shells out to git and analyzes your commit message
 
 Token counting uses tiktoken (same tokenizer as GPT-4) with a character-based fallback if tiktoken isn't available.
 
+## Enterprise adoption
+
+Most orgs are spending real money on AI coding tools and getting inconsistent results across teams. One team gets great output from Copilot, another team gets garbage. The difference usually isn't the model or the tool — it's the codebase underneath.
+
+**Start here (takes 10 minutes):**
+
+Run `npx airspec score --json` across your top 5 repos. You'll immediately see which ones are set up for AI success and which ones are fighting it. No procurement, no vendor call, no API keys.
+
+**Wire it into what you already have:**
+
+```yaml
+# Drop this into any existing GitHub Actions workflow
+- run: npx airspec score --ci --min-score 60
+```
+
+Start the threshold low. 60 is fine. The point isn't to block PRs on day one — it's to make the number visible. Teams that can see a score start improving it on their own.
+
+**Track it over time:**
+
+Every run writes `.airspec/score.json` with a full dimension breakdown. Pipe that into whatever dashboard you already use — Datadog, Grafana, a spreadsheet, doesn't matter. The JSON is stable and includes timestamps. You can plot AI readability the same way you plot test coverage or deploy frequency.
+
+**Where it pays off fast:**
+
+- **Onboarding.** New engineers using AI tools ramp up faster on well-scored repos. If your docs dimension is at 30, that's why the new hire's Copilot keeps hallucinating internal APIs.
+- **Monorepos.** Score individual packages. You'll find that the teams writing clean module boundaries (`architecture_clarity`) get dramatically better agent output than teams with circular imports everywhere.
+- **Post-incident.** After an AI-assisted change causes a production issue, check `decision_traceability`. If it's low, the agent literally couldn't see why the previous approach existed. That's a systemic problem, not a model problem.
+- **Vendor evaluation.** Trying a new AI coding tool? Run it against a high-scoring repo and a low-scoring repo. The delta tells you how much the tool depends on context quality vs. its own reasoning. Most of them depend on context more than they'd like to admit.
+
+**Custom weights for your org:**
+
+Different codebases care about different things. A library with a public API should weight `contract_explicitness` and `documentation_coverage` higher. An internal service might care more about `decision_traceability` and `architecture_clarity`.
+
+```bash
+airspec score --weights contract_explicitness=25,documentation_coverage=25,decision_traceability=20
+```
+
+Weights get normalized automatically. Set the ones you care about higher and airspec adjusts the rest.
+
 ## The bigger idea
 
 A mediocre agent with great context outperforms a brilliant agent with bad context. We've all experienced this — the model is smart enough, it just doesn't know your codebase. Context is the bottleneck, not capability.
