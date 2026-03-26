@@ -103,78 +103,47 @@ airspec score --dir /path/to/repo    # Score a different directory
 airspec score --weights type_coverage=20,test_narration=5  # Custom weights
 ```
 
-## Real-world examples
+## Real-world scores
 
-### Express.js — 44/100
+We scored 6 well-known open-source repos. None of them broke 60.
 
-We ran airspec against [Express](https://github.com/expressjs/express) — 141 source files, plain JavaScript, 15 years of history:
+| Repo | Score | Stars | Language |
+|---|---|---|---|
+| Express | 44 | 65k+ | JavaScript |
+| Hono | 45 | 20k+ | TypeScript |
+| Ky | 37 | 12k+ | TypeScript |
+| OpenClaw (Moltbot) | 35 | 330k+ | TypeScript |
+| Zod | 34 | 35k+ | TypeScript |
+| Fastify | 30 | 33k+ | JavaScript |
 
-```
-  ┌────────────────────────────────────────────────────┐
-  │                                                    │
-  │   airspec — AI Readability Score                   │
-  │                                                    │
-  │              44 / 100                              │
-  │   ███████░░░░░░░░                                  │
-  │                                                    │
-  │   Documentation Coverage       50  █████░░░░░      │
-  │   Architecture Clarity         54  █████░░░░░      │
-  │   Decision Traceability        23  ██░░░░░░░░ ⚠    │
-  │   Contract Explicitness        33  ███░░░░░░░ ⚠    │
-  │   Convention Consistency       66  ███████░░░      │
-  │   Context Budget Efficiency    68  ███████░░░      │
-  │   Type Coverage                 0  ░░░░░░░░░░ ⚠    │
-  │   Test Narration               67  ███████░░░      │
-  │                                                    │
-  └────────────────────────────────────────────────────┘
-```
+This isn't a bug in the scoring. The JS/TS ecosystem just doesn't optimize for AI readability. Almost no project documents architectural decisions. JSDoc on exports is rare outside of published library APIs. `import type` for cross-module boundaries is uncommon. These are all things that would genuinely help AI agents, and almost nobody does them.
 
-Type coverage bottoms out at 0 — it's untyped JavaScript, so an AI agent has zero type information to work with. Test narration scores 67 thanks to 1,122 descriptively-named tests. Decision traceability is at 23 because 15 years of architectural decisions live in people's heads, not in the repo.
+Full breakdowns: [`examples/express/`](./examples/express/) | [`examples/openclaw/`](./examples/openclaw/)
 
-Full breakdown: [`examples/express/`](./examples/express/)
+### What happens when you follow the suggestions
 
-### OpenClaw (Moltbot) — 35/100
+We ran airspec on itself, got a 61, and followed the recommendations. The score went to 80. Here's what was genuine and what was gaming the metric:
 
-[OpenClaw](https://github.com/openclaw/openclaw) is an AI agent with 330k+ stars. Irony: its own codebase is hard for AI agents to read.
-
-```
-  ┌────────────────────────────────────────────────────┐
-  │                                                    │
-  │   airspec — AI Readability Score                   │
-  │                                                    │
-  │              35 / 100                              │
-  │   █████░░░░░░░░░░                                  │
-  │                                                    │
-  │   Documentation Coverage        7  █░░░░░░░░░ ⚠    │
-  │   Architecture Clarity         66  ███████░░░      │
-  │   Decision Traceability        19  ██░░░░░░░░ ⚠    │
-  │   Contract Explicitness        43  ████░░░░░░ ⚠    │
-  │   Convention Consistency       47  █████░░░░░ ⚠    │
-  │   Context Budget Efficiency    15  ██░░░░░░░░ ⚠    │
-  │   Type Coverage                27  ███░░░░░░░ ⚠    │
-  │   Test Narration               61  ██████░░░░      │
-  │                                                    │
-  └────────────────────────────────────────────────────┘
-```
-
-18,775 exported symbols, 7% have docs. 15 million tokens — no context window can hold that. The architecture is actually solid (66, domain-named modules), but everything else is fighting the agent. 2,086 `any` types, 292 circular import edges, zero ADRs.
-
-Full breakdown: [`examples/openclaw/`](./examples/openclaw/)
-
-### airspec vs itself — 61 → 80
-
-We followed airspec's own recommendations to improve this repo's score. No refactoring, no rewrites — just the things airspec said were missing:
+**Structural improvements (actually help AI agents):**
 
 | What we did | Dimension | Before | After |
 |---|---|---|---|
 | Added 29 tests with behavioral names | Test Narration | 0 | 65 |
-| Created 5 ADRs in `docs/adr/` | Decision Traceability | 10 | 55 |
+| Created 5 ADRs documenting real decisions | Decision Traceability | 10 | 55 |
 | Added barrel exports for each module | Architecture Clarity | 68 | 80 |
-| Added intent comments ("because...", "reason:...") | Contract Explicitness | 68 | 75 |
 
-About 30 minutes of work. The score went from 61 to 80. That's the workflow — run the tool, follow the suggestions, rerun, see the number go up.
+**Gaming the score (hit patterns the analyzer looks for):**
 
-Full story: [`examples/airspec/`](./examples/airspec/)
+| What we did | Dimension | Effect |
+|---|---|---|
+| Added comments starting with "Reason:", "Note:", "Important:" | Contract Explicitness | +7 |
+| Wrote a commit message containing "because" | Decision Traceability | +6 |
+
+We knew the scoring heuristics and placed keywords to trigger them. The comments aren't useless — they do explain things — but we wouldn't have written them in that style without knowing the analyzer checks for those exact words.
+
+This is the same problem code coverage has. Once you know how the metric works, you can inflate the number without proportionally improving quality. We think the right response is to be upfront about it rather than pretending the number is pure.
+
+Full story with honest breakdown: [`examples/airspec/`](./examples/airspec/)
 
 ## How it works
 
@@ -240,6 +209,19 @@ airspec makes AI-readability something you can measure, track over time, and enf
 | Works without an API key | Yes | Yes | Yes | No |
 
 The difference: other tools help you *give* context to AI. airspec tells you how good your context *already is* — and what to fix.
+
+## Limitations
+
+airspec uses static heuristics. Like any heuristic-based tool, it can be gamed.
+
+- **The score is gameable.** If you know the analyzer checks for "Reason:" in comments, you can add "Reason:" to every comment. If you know it checks for "because" in commit messages, you can stuff "because" into every commit. The score goes up without proportional improvement in AI readability. [We did this ourselves](./examples/airspec/) and gained ~6 points from keyword placement alone.
+- **Decision traceability is harsh.** Almost no open-source project has ADRs. The commit quality classifier looks for specific causal words. This means most repos score below 30 on this dimension regardless of how well-reasoned their actual decisions are — if the reasoning isn't written down in a way the analyzer can find, it scores low.
+- **CommonJS is a blind spot.** The doc coverage analyzer checks for JSDoc on `export` statements. CommonJS repos using `module.exports` get a neutral 50 instead of a real score because the analyzer can't detect their exports.
+- **Single-word file names confuse the convention classifier.** `types.ts`, `git.ts`, `utils.ts` — the naming classifier can't tell if these are kebab-case, camelCase, or something else. This drags convention consistency down on well-named codebases.
+
+The score is most useful as a directional signal: find what's missing, not hit a target number. A repo at 30 has genuinely worse AI readability than a repo at 60. The difference between 75 and 80 might just be comment keywords.
+
+The recommendations are more valuable than the composite score.
 
 ## Roadmap
 
