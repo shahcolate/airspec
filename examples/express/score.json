@@ -1,0 +1,167 @@
+{
+  "version": "0.1.0",
+  "timestamp": "2026-03-26T13:08:41.658Z",
+  "composite_score": 52,
+  "profile": "default-2026",
+  "repository": {
+    "name": "express",
+    "language": "javascript",
+    "framework": null,
+    "source_files": 141,
+    "total_tokens": 136683
+  },
+  "dimensions": {
+    "documentation_coverage": {
+      "score": 100,
+      "weight": 0.15,
+      "details": {
+        "total_exports": 0,
+        "documented_exports": 0,
+        "trivial_docs": 0,
+        "coverage_pct": 100
+      }
+    },
+    "type_coverage": {
+      "score": 0,
+      "weight": 0.1,
+      "details": {
+        "typed_params": 0,
+        "total_params": 3699,
+        "explicit_returns": 0,
+        "total_functions": 3093,
+        "any_count": 5
+      }
+    },
+    "convention_consistency": {
+      "score": 66,
+      "weight": 0.1,
+      "details": {
+        "function_naming_score": 100,
+        "variable_naming_score": 100,
+        "file_naming_score": 46,
+        "pattern_score": 50,
+        "organization_score": 67,
+        "exported_functions": 0,
+        "exported_variables": 0
+      }
+    },
+    "test_narration": {
+      "score": 67,
+      "weight": 0.1,
+      "details": {
+        "test_files": 91,
+        "total_tests": 1122,
+        "descriptive_tests": 1121,
+        "tests_in_describe": 332,
+        "describe_blocks": 556,
+        "opaque_tests": 1
+      }
+    },
+    "context_budget_efficiency": {
+      "score": 68,
+      "weight": 0.1,
+      "details": {
+        "total_tokens": 136683,
+        "signal_tokens": 136683,
+        "noise_tokens": 0,
+        "noise_ratio_pct": 0,
+        "large_unmarked_files": 2,
+        "has_gitignore": true,
+        "has_airspecignore": false
+      }
+    },
+    "architecture_clarity": {
+      "score": 54,
+      "weight": 0.15,
+      "details": {
+        "total_modules": 3,
+        "domain_dirs": 2,
+        "generic_dirs": 1,
+        "dir_coherence_score": 67,
+        "total_import_edges": 0,
+        "bidirectional_edges": 0,
+        "directionality_score": 80,
+        "has_entry_point": true,
+        "has_package_entry": false,
+        "modules_with_barrel": 0
+      }
+    },
+    "contract_explicitness": {
+      "score": 33,
+      "weight": 0.15,
+      "details": {
+        "cross_module_imports": 0,
+        "typed_cross_module_imports": 0,
+        "type_files": 0,
+        "invariant_comments": 2,
+        "total_modules": 3
+      }
+    },
+    "decision_traceability": {
+      "score": 23,
+      "weight": 0.15,
+      "details": {
+        "adr_present": false,
+        "adr_entries": 0,
+        "total_commits": 50,
+        "high_quality_commits": 19,
+        "low_quality_commits": 1,
+        "generic_commit_pct": 2,
+        "intent_comments": 8,
+        "bare_todos": 2,
+        "explained_todos": 0
+      }
+    }
+  },
+  "recommendations": [
+    {
+      "dimension": "type_coverage",
+      "priority": "high",
+      "message": "3699 function parameters lack explicit type annotations. AI agents rely on types to understand data flow.",
+      "action": "Add explicit type annotations to function parameters and return types.",
+      "affected_count": 3704
+    },
+    {
+      "dimension": "decision_traceability",
+      "priority": "high",
+      "message": "Decision history is hard to trace. No ADRs or structured decision records found.",
+      "action": "Create a docs/adr/ directory and document key architectural decisions.",
+      "affected_count": 0
+    },
+    {
+      "dimension": "contract_explicitness",
+      "priority": "high",
+      "message": "0 cross-module imports use implementation types instead of explicit contracts.",
+      "action": "Create types.ts at module boundaries. Use `import type` for cross-module dependencies.",
+      "affected_count": 0
+    },
+    {
+      "dimension": "architecture_clarity",
+      "priority": "medium",
+      "message": "Module structure lacks clarity. AI agents struggle to navigate the codebase.",
+      "action": "Use domain-oriented directory names and add barrel exports (index.ts) for each module.",
+      "affected_count": 0
+    },
+    {
+      "dimension": "convention_consistency",
+      "priority": "low",
+      "message": "Naming conventions are inconsistent across the codebase. AI agents struggle with inconsistent patterns.",
+      "action": "Standardize naming: camelCase for functions/variables, PascalCase for classes/types, kebab-case for files.",
+      "affected_count": 0
+    },
+    {
+      "dimension": "test_narration",
+      "priority": "low",
+      "message": "1 tests use opaque names. AI agents can't learn behavioral contracts from tests.",
+      "action": "Use descriptive names: \"should reject expired tokens\" instead of \"test1\".",
+      "affected_count": 1
+    },
+    {
+      "dimension": "context_budget_efficiency",
+      "priority": "low",
+      "message": "~137K tokens to represent this repo. 0% is boilerplate/noise. AI agents waste context window on noise.",
+      "action": "Add .airspecignore for generated/vendored files. Mark generated files with header comments.",
+      "affected_count": 0
+    }
+  ]
+}

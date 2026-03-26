@@ -103,6 +103,34 @@ airspec score --dir /path/to/repo    # Score a different directory
 airspec score --weights type_coverage=20,test_narration=5  # Custom weights
 ```
 
+## Real-world example
+
+We ran airspec against [Express.js](https://github.com/expressjs/express) — 141 source files, plain JavaScript, 15 years of history:
+
+```
+  ┌────────────────────────────────────────────────────┐
+  │                                                    │
+  │   airspec — AI Readability Score                   │
+  │                                                    │
+  │              52 / 100                              │
+  │   ████████░░░░░░░                                  │
+  │                                                    │
+  │   Documentation Coverage      100  ██████████      │
+  │   Architecture Clarity         54  █████░░░░░      │
+  │   Decision Traceability        23  ██░░░░░░░░ ⚠    │
+  │   Contract Explicitness        33  ███░░░░░░░ ⚠    │
+  │   Convention Consistency       66  ███████░░░      │
+  │   Context Budget Efficiency    68  ███████░░░      │
+  │   Type Coverage                 0  ░░░░░░░░░░ ⚠    │
+  │   Test Narration               67  ███████░░░      │
+  │                                                    │
+  └────────────────────────────────────────────────────┘
+```
+
+Type coverage bottoms out at 0 — it's untyped JavaScript, so an AI agent has zero type information to work with. Test narration scores 67 thanks to 1,122 descriptively-named tests. Decision traceability is at 23 because 15 years of architectural decisions live in people's heads, not in the repo.
+
+Full breakdown with dimension-by-dimension analysis: [`examples/express/`](./examples/express/)
+
 ## How it works
 
 airspec uses the TypeScript Compiler API to parse your code into an AST. No tree-sitter, no regex soup — actual type-aware analysis. It reads your `tsconfig.json`, respects your `.gitignore`, and runs all 8 analyzers in parallel.
