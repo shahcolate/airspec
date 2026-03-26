@@ -1,6 +1,10 @@
 /**
  * Dimension 5: Context Budget Efficiency
  * Measures signal-to-noise ratio of the codebase in terms of tokens.
+ *
+ * Context: AI models have finite context windows. A repo with 500K tokens of source
+ * can't fit in a single prompt. This dimension measures how efficiently the codebase
+ * uses that budget — less noise means more room for actual code in the context window.
  */
 import * as fs from 'node:fs';
 import * as path from 'node:path';

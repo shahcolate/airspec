@@ -105,7 +105,7 @@ airspec score --weights type_coverage=20,test_narration=5  # Custom weights
 
 ## Real-world examples
 
-### Express.js — 52/100
+### Express.js — 44/100
 
 We ran airspec against [Express](https://github.com/expressjs/express) — 141 source files, plain JavaScript, 15 years of history:
 
@@ -114,10 +114,10 @@ We ran airspec against [Express](https://github.com/expressjs/express) — 141 s
   │                                                    │
   │   airspec — AI Readability Score                   │
   │                                                    │
-  │              52 / 100                              │
-  │   ████████░░░░░░░                                  │
+  │              44 / 100                              │
+  │   ███████░░░░░░░░                                  │
   │                                                    │
-  │   Documentation Coverage      100  ██████████      │
+  │   Documentation Coverage       50  █████░░░░░      │
   │   Architecture Clarity         54  █████░░░░░      │
   │   Decision Traceability        23  ██░░░░░░░░ ⚠    │
   │   Contract Explicitness        33  ███░░░░░░░ ⚠    │
@@ -160,6 +160,21 @@ Full breakdown: [`examples/express/`](./examples/express/)
 18,775 exported symbols, 7% have docs. 15 million tokens — no context window can hold that. The architecture is actually solid (66, domain-named modules), but everything else is fighting the agent. 2,086 `any` types, 292 circular import edges, zero ADRs.
 
 Full breakdown: [`examples/openclaw/`](./examples/openclaw/)
+
+### airspec vs itself — 61 → 80
+
+We followed airspec's own recommendations to improve this repo's score. No refactoring, no rewrites — just the things airspec said were missing:
+
+| What we did | Dimension | Before | After |
+|---|---|---|---|
+| Added 29 tests with behavioral names | Test Narration | 0 | 65 |
+| Created 5 ADRs in `docs/adr/` | Decision Traceability | 10 | 55 |
+| Added barrel exports for each module | Architecture Clarity | 68 | 80 |
+| Added intent comments ("because...", "reason:...") | Contract Explicitness | 68 | 75 |
+
+About 30 minutes of work. The score went from 61 to 80. That's the workflow — run the tool, follow the suggestions, rerun, see the number go up.
+
+Full story: [`examples/airspec/`](./examples/airspec/)
 
 ## How it works
 

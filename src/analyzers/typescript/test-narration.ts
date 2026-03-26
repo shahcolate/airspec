@@ -1,6 +1,10 @@
 /**
  * Dimension 4: Test Narration Quality
  * Measures how descriptive and well-organized tests are.
+ *
+ * Context: AI agents use test names to learn behavioral contracts. A test named
+ * "should reject expired tokens" teaches an agent what the function does and
+ * what invariants it enforces. A test named "test1" teaches nothing.
  */
 import * as fs from 'node:fs';
 import * as path from 'node:path';

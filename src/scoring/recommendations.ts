@@ -160,6 +160,7 @@ function buildRecommendation(
 
     case 'decision_traceability': {
       const genericPct = d.generic_commit_pct as number;
+      const hasAdr = d.adr_present as boolean;
       if (genericPct > 50) {
         return {
           dimension: name,
@@ -169,12 +170,23 @@ function buildRecommendation(
           affected_count: d.low_quality_commits as number,
         };
       }
+      if (!hasAdr) {
+        return {
+          dimension: name,
+          priority,
+          message: 'No architectural decision records found. AI agents can\'t recover why decisions were made.',
+          action: 'Create a docs/adr/ directory and document key architectural decisions.',
+          affected_count: 0,
+        };
+      }
+      const highQuality = d.high_quality_commits as number;
+      const total = d.total_commits as number;
       return {
         dimension: name,
         priority,
-        message: 'Decision history is hard to trace. No ADRs or structured decision records found.',
-        action: 'Create a docs/adr/ directory and document key architectural decisions.',
-        affected_count: 0,
+        message: `Only ${highQuality} of ${total} recent commits explain reasoning. Most lack causal context.`,
+        action: 'Use commit messages that explain WHY: "because...", "to prevent...", "due to...".',
+        affected_count: total - highQuality,
       };
     }
   }

@@ -43,10 +43,13 @@ export async function analyzeDocCoverage(
   }
 
   if (totalExports === 0) {
+    // Note: CommonJS repos using module.exports won't have ES export statements.
+    // We give a neutral 50 rather than 100 because we can't verify doc coverage.
+    // Reason: a vacuous 100% would inflate scores for undocumented CommonJS repos.
     return {
-      score: 100,
+      score: 50,
       weight: 0.15,
-      details: { total_exports: 0, documented_exports: 0, trivial_docs: 0, coverage_pct: 100 },
+      details: { total_exports: 0, documented_exports: 0, trivial_docs: 0, coverage_pct: 0, note: 'no_es_exports_found' },
     };
   }
 

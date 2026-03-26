@@ -31,6 +31,10 @@ const SOURCE_EXTENSIONS = ['ts', 'tsx', 'js', 'jsx', 'mts', 'mjs', 'cts', 'cjs']
 /**
  * Walk source files in a project directory.
  * Returns file paths relative to the project root.
+ *
+ * Important: always respects .gitignore and .airspecignore. Never returns
+ * files from node_modules, dist, build, .git, or .airspec directories.
+ * Constraint: returned paths must be relative to projectDir, never absolute.
  */
 export async function walkSourceFiles(projectDir: string): Promise<string[]> {
   const ignorePatterns = [...ALWAYS_EXCLUDE];

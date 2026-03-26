@@ -7,6 +7,8 @@ let tiktokenLoaded = false;
 
 /**
  * Attempt to load tiktoken encoder. Falls back to char-based estimation.
+ * Note: we use a singleton because creating encoders is expensive (~50ms).
+ * Reason: loading once and reusing avoids per-file overhead on large repos.
  */
 async function loadEncoder(): Promise<void> {
   if (tiktokenLoaded) return;

@@ -63,18 +63,22 @@ export async function runScore(options: ScoreOptions): Promise<void> {
     recommendations,
   };
 
-  // 7. Write score.json
+  // Important: always write score.json even in CI mode, because downstream
+  // tools may read it for dashboard reporting regardless of exit code.
   const outputPath = path.join(projectDir, '.airspec', 'score.json');
   writeJson(outputPath, report);
 
-  // 8. Output
+  // Note: --json and --ci both produce JSON to stdout. The reason --ci exists
+  // separately is for the exit code behavior — --json always exits 0.
   if (options.json || options.ci) {
     process.stdout.write(JSON.stringify(report, null, 2) + '\n');
   } else {
     console.log(renderScoreCard(report));
   }
 
-  // 9. CI mode: exit with error if below threshold
+  // CI mode: exit with error if below threshold. This must come last
+  // because the score.json and stdout output should always be written
+  // regardless of whether the threshold check passes.
   if (options.ci && options.minScore !== null && compositeScore < options.minScore) {
     console.error(
       `\nScore ${compositeScore} is below minimum threshold of ${options.minScore}`

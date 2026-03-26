@@ -27,7 +27,8 @@ export class TypeScriptAnalyzer implements LanguageAnalyzer {
   ): Promise<Record<DimensionName, DimensionResult>> {
     const sourceFiles = await walkSourceFiles(projectDir);
 
-    // Run analyzers in parallel where possible
+    // Note: analyzers run in parallel because they are stateless — each reads files
+    // independently. If one fails, safeAnalyze catches it so others aren't affected.
     const [
       docCoverage,
       typeCoverage,
@@ -63,6 +64,9 @@ export class TypeScriptAnalyzer implements LanguageAnalyzer {
 
 /**
  * Safely run an analyzer, returning a zero-score result if it throws.
+ *
+ * Reason: we never want one broken analyzer to crash the entire scoring run.
+ * A zero score with an error message is more useful than no output at all.
  */
 async function safeAnalyze(
   dimension: DimensionName,
