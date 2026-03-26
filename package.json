@@ -1,0 +1,46 @@
+{
+  "name": "airspec",
+  "version": "0.1.0",
+  "description": "AI Readability Score — Lighthouse, but for how well AI agents can understand your repo",
+  "type": "module",
+  "main": "dist/cli/index.js",
+  "bin": {
+    "airspec": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "ai",
+    "readability",
+    "code-quality",
+    "cli",
+    "developer-tools",
+    "context",
+    "documentation",
+    "lighthouse"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "glob": "^11.0.0",
+    "simple-git": "^3.27.0",
+    "tiktoken": "^1.0.18",
+    "yaml": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}
