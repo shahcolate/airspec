@@ -4,7 +4,6 @@
  */
 import ts from 'typescript';
 import * as fs from 'node:fs';
-import * as path from 'node:path';
 
 /**
  * Parse a single source file into a TypeScript AST.

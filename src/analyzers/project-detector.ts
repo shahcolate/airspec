@@ -40,7 +40,12 @@ export async function detectProject(projectDir: string): Promise<ProjectProfile>
   const pkgJsonPath = path.join(projectDir, 'package.json');
   let pkgJson: Record<string, unknown> = {};
   if (fs.existsSync(pkgJsonPath)) {
-    pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf-8'));
+    try {
+      pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf-8')) as Record<string, unknown>;
+    } catch {
+      // A malformed package.json in the target repo must not abort scoring;
+      // detection just degrades to filesystem-based heuristics.
+    }
   }
 
   const deps = {

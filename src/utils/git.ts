@@ -1,6 +1,7 @@
 /**
  * Git operations wrapper using simple-git.
  */
+import * as path from 'node:path';
 import { simpleGit, type SimpleGit, type LogResult } from 'simple-git';
 
 /**
@@ -61,6 +62,5 @@ export async function getRepoName(dir: string): Promise<string> {
   } catch {
     // Fall through to directory name
   }
-  const parts = dir.split('/');
-  return parts[parts.length - 1] || 'unknown';
+  return path.basename(path.resolve(dir)) || 'unknown';
 }

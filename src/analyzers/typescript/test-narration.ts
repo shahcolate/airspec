@@ -70,11 +70,7 @@ export async function analyzeTestNarration(
     }
 
     // Count describe blocks
-    const describeRegex = /\bdescribe\s*\(/g;
-    let descMatch: RegExpExecArray | null;
-    while ((descMatch = describeRegex.exec(content)) !== null) {
-      describeBlocks++;
-    }
+    describeBlocks += (content.match(/\bdescribe\s*\(/g) ?? []).length;
 
     // Estimate tests inside describe blocks (rough heuristic)
     const describeTestRegex = /describe\s*\([^)]*,\s*(?:function\s*\(\)|(?:\(\)\s*=>))\s*\{[^}]*\b(?:test|it)\s*\(/gs;
