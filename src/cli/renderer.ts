@@ -3,7 +3,7 @@
  * Uses Unicode box-drawing characters and chalk colors.
  */
 import chalk from 'chalk';
-import type { DimensionName, DimensionResult, Recommendation, ScoreReport } from '../types.js';
+import type { DimensionName, ScoreReport } from '../types.js';
 
 /** Display order and labels for dimensions */
 const DIMENSION_DISPLAY: Array<{ key: DimensionName; label: string }> = [

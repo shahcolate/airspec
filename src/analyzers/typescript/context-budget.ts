@@ -10,7 +10,6 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import type { DimensionResult } from '../../types.js';
 import { countTokens } from '../../utils/tokens.js';
-import { walkSourceFiles } from '../utils/file-walker.js';
 
 /** Patterns indicating generated/noise files */
 const NOISE_PATTERNS = [
@@ -39,8 +38,8 @@ export async function analyzeContextBudget(
   let totalTokens = 0;
   let noiseTokens = 0;
   let largeGeneratedFiles = 0;
-  let hasAirspecIgnore = fs.existsSync(path.join(projectDir, '.airspecignore'));
-  let hasGitignore = fs.existsSync(path.join(projectDir, '.gitignore'));
+  const hasAirspecIgnore = fs.existsSync(path.join(projectDir, '.airspecignore'));
+  const hasGitignore = fs.existsSync(path.join(projectDir, '.gitignore'));
 
   for (const file of sourceFiles) {
     const fullPath = path.join(projectDir, file);

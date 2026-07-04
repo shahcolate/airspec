@@ -3,18 +3,6 @@
  */
 import type { DimensionName, DimensionResult, Recommendation } from '../types.js';
 
-/** Human-readable dimension labels */
-const DIMENSION_LABELS: Record<DimensionName, string> = {
-  documentation_coverage: 'Documentation Coverage',
-  type_coverage: 'Type Coverage',
-  convention_consistency: 'Convention Consistency',
-  test_narration: 'Test Narration',
-  context_budget_efficiency: 'Context Budget Efficiency',
-  architecture_clarity: 'Architecture Clarity',
-  contract_explicitness: 'Contract Explicitness',
-  decision_traceability: 'Decision Traceability',
-};
-
 /**
  * Generate recommendations sorted by impact (lowest scores first, weighted by importance).
  */

@@ -3,7 +3,6 @@
  * Measures naming, pattern, and file organization consistency.
  */
 import ts from 'typescript';
-import * as fs from 'node:fs';
 import * as path from 'node:path';
 import type { DimensionResult } from '../../types.js';
 import { parseFile, collectExports, getNodeName } from '../utils/ast.js';

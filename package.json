@@ -7,13 +7,28 @@
   "bin": {
     "airspec": "dist/cli/index.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/cli/index.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build && npm run lint && npm run test"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shahcolate/airspec.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shahcolate/airspec/issues"
+  },
+  "homepage": "https://github.com/shahcolate/airspec#readme",
   "keywords": [
     "ai",
     "readability",
@@ -38,9 +53,12 @@
     "yaml": "^2.6.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/node": "^22.10.0",
+    "eslint": "^9.39.4",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
+    "typescript-eslint": "^8.62.1",
     "vitest": "^2.1.0"
   }
 }
